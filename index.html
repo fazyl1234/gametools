@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GameTools — инструменты для геймеров</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b0d14;color:#f4f5ff;font:16px Arial,sans-serif}
+header{text-align:center;padding:55px 15px;background:linear-gradient(135deg,#211746,#101b29)}
+h1{font-size:45px;margin:0 0 12px}
+h1 span{color:#50e3b2}
+header p{color:#b7bfd3}
+main{max-width:1000px;margin:30px auto;padding:0 15px}
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px}
+.card{background:#151b28;border:1px solid #30394d;border-radius:16px;padding:22px}
+h2{font-size:20px;margin-top:0}
+p{color:#aeb8cc;line-height:1.5}
+label{display:block;margin:12px 0 6px;color:#cbd2e2}
+input,select{width:100%;padding:11px;background:#0b101a;color:white;border:1px solid #39445c;border-radius:8px;font-size:15px}
+button{background:#8b6cff;color:white;border:0;padding:11px 14px;border-radius:9px;font-weight:bold;cursor:pointer;margin-top:12px}
+button:hover{filter:brightness(1.15)}
+.result{background:#0b101a;border-radius:9px;padding:14px;margin-top:13px;overflow-wrap:anywhere}
+.big{font-size:30px;color:#50e3b2;font-weight:bold}
+footer{text-align:center;color:#778197;padding:30px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎮 Game<span>Tools</span></h1>
+  <p>Бесплатные инструменты для геймеров</p>
+</header>
+
+<main>
+<div class="tools">
+
+<section class="card">
+<h2>🎯 Калькулятор eDPI CS2</h2>
+<p>Рассчитай эффективную чувствительность мыши.</p>
+<label for="dpi">DPI мыши</label>
+<input id="dpi" type="number" value="800" min="1">
+<label for="sens">Sensitivity в CS2</label>
+<input id="sens" type="number" value="1.2" min="0.01" step="0.01">
+<button onclick="calc()">Рассчитать</button>
+<div class="result">Твой eDPI: <div class="big" id="edpi">960</div></div>
+</section>
+
+<section class="card">
+<h2>🕹️ Генератор ников</h2>
+<p>Придумай новый ник для игры.</p>
+<label for="style">Стиль</label>
+<select id="style">
+<option value="all">Любой</option>
+<option value="dark">Тёмный</option>
+<option value="fun">Смешной</option>
+<option value="cyber">Кибер</option>
+</select>
+<div class="result big" id="nick">Nexo</div>
+<button onclick="nickname()">Сгенерировать ник</button>
+<button onclick="copyText('nick')">Копировать</button>
+</section>
+
+<section class="card">
+<h2>🎲 Челлендж на катку</h2>
+<p>Получи задание для следующей игры.</p>
+<div class="result" id="challenge">Сыграй матч и найди одну ошибку, которую можешь исправить.</div>
+<button onclick="challenge()">Новое задание</button>
+<button onclick="copyText('challenge')">Копировать</button>
+</section>
+
+<section class="card">
+<h2>⛏️ Команды Minecraft</h2>
+<p>Генерируй команды для Minecraft Java Edition.</p>
+<label for="effect">Эффект</label>
+<select id="effect">
+<option value="speed">Скорость</option>
+<option value="strength">Сила</option>
+<option value="night_vision">Ночное зрение</option>
+</select>
+<label for="seconds">Длительность в секундах</label>
+<input id="seconds" type="number" value="60" min="1">
+<label for="level">Уровень эффекта</label>
+<input id="level" type="number" value="2" min="1" max="255">
+<div class="result" id="command">/effect give @p minecraft:speed 60 1</div>
+<button onclick="makeCommand()">Создать команду</button>
+<button onclick="copyText('command')">Копировать</button>
+</section>
+
+</div>
+</main>
+
+<footer>GameTools © 2026 · Играй умнее 🚀</footer>
+
+<script>
+function calc(){
+  const dpi=Number(document.getElementById('dpi').value);
+  const sens=Number(document.getElementById('sens').value);
+  const out=document.getElementById('edpi');
+  if(!Number.isFinite(dpi)||!Number.isFinite(sens)||dpi<=0||sens<=0){
+    out.textContent='Введи числа больше нуля';return;
+  }
+  out.textContent=Number((dpi*sens).toFixed(2)).toLocaleString('ru-RU');
+}
+
+const nicknames={
+  all:['Nexo','Vexor','Kairo','Nairo','PixelX','Ryzen','Zefi','Glitch'],
+  dark:['Void','GhostX','Noctis','DarkVex','Nightfall','Hollow'],
+  fun:['LagLord','PotatoAim','MissClick','OopsFrag','CrouchCat'],
+  cyber:['CyberVex','NeonByte','HexDrive','ZeroPing','Quantix']
+};
+function nickname(){
+  const style=document.getElementById('style').value;
+  const list=nicknames[style];
+  document.getElementById('nick').textContent=list[Math.floor(Math.random()*list.length)];
+}
+
+const challenges=[
+  'Разомнись 5 минут перед матчем.',
+  'Давай команде полезную информацию.',
+  'После игры найди одну ошибку.',
+  'Попробуй выиграть раунд за счёт позиции.',
+  'Не тильтуй после проигранного раунда.',
+  'Потренируй один раскид на своей карте.',
+  'Сосредоточься на звуках и мини-карте.'
+];
+function challenge(){
+  const list=challenges;
+  document.getElementById('challenge').textContent=
+    list[Math.floor(Math.random()*list.length)];
+}
+
+function makeCommand(){
+  const effect=document.getElementById('effect').value;
+  const seconds=Math.max(1,Math.min(100000,Number(document.getElementById('seconds').value)||60));
+  const level=Math.max(1,Math.min(255,Number(document.getElementById('level').value)||1));
+  document.getElementById('command').textContent=
+    '/effect give @p minecraft:'+effect+' '+seconds+' '+(effect==='night_vision'?0:level-1);
+}
+
+async function copyText(id){
+  const text=document.getElementById(id).textContent;
+  try{
+    await navigator.clipboard.writeText(text);
+    alert('Скопировано!');
+  }catch(e){
+    prompt('Скопируй текст вручную:',text);
+  }
+}
+document.getElementById('dpi').addEventListener('input',calc);
+document.getElementById('sens').addEventListener('input',calc);
+document.getElementById('effect').addEventListener('change',makeCommand);
+document.getElementById('seconds').addEventListener('input',makeCommand);
+document.getElementById('level').addEventListener('input',makeCommand);
+</script>
+</body>
+</html>
+
+
+
+
